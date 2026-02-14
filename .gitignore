@@ -6,6 +6,8 @@ __pycache__/
 *.so
 .Python
 
+node_modules/
+
 env/
 venv/
 ENV/
