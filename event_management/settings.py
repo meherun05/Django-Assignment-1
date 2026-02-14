@@ -1,4 +1,6 @@
 from pathlib import Path
+import dj_database_url
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-your-secret-key-here-change-in-production'
@@ -55,11 +57,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'event_management.wsgi.application'
 
 # Database
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default='postgresql://event_management_7ixr_user:nTX8tEDxHmx2xNBDIoTuRJi1wr57w81K@dpg-d68ah33nv86c73ebu6fg-a.oregon-postgres.render.com/event_management_7ixr',
+        conn_max_age=600
+    )
 }
 
 

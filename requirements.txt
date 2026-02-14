@@ -1,11 +1,16 @@
 asgiref==3.9.1
 distlib==0.3.9
+dj-database-url==3.1.0
 Django==5.2.6
 django-debug-toolbar==6.1.0
+Faker==40.1.0
 filelock==3.18.0
+npm==0.1.1
+optional-django==0.1.0
 platformdirs==4.3.8
 psycopg-binary==3.2.10
 psycopg2-binary==2.9.10
 sqlparse==0.5.3
+tailwind==3.1.5b0
 tzdata==2025.2
 virtualenv==20.31.2
