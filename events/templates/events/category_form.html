@@ -1,0 +1,42 @@
+{% extends 'index.html' %}
+
+{% block title %}{{ title }} - Event Management{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="{% url 'category_list' %}" class="text-indigo-600 hover:text-indigo-800 font-medium">
+            Back to Categories
+        </a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-lg p-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-6">{{ title }}</h1>
+
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div>
+                <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="flex space-x-4 pt-4">
+                <button type="submit" class="flex-1 bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 transition-colors">
+                    {{ button_text }}
+                </button>
+                <a href="{% url 'category_list' %}" class="bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition-colors">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

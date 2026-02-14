@@ -1,0 +1,184 @@
+{% extends 'index.html' %}
+
+{% block title %}Dashboard - Event Management{% endblock %}
+
+{% block content %}
+
+<!-- start grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- total participant -->
+    <div class="bg-white rounded-xl shadow-md p-6 border-l-4">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600">Total Participants</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">{{ total_participants }}</p>
+            </div>
+            <div class="bg-blue-100 rounded-full p-3">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- total event -->
+    <a href="?filter=all" class="bg-white rounded-xl shadow-md p-6 border-l-4 cursor-pointer">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600">Total Events</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">{{ total_events }}</p>
+            </div>
+            <div class="bg-green-100 rounded-full p-3">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+        </div>
+    </a>
+
+    <!-- upcoming event -->
+    <a href="?filter=upcoming" class="bg-white rounded-xl shadow-md p-6 border-l-4 cursor-pointer">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600">Upcoming Events</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">{{ upcoming_events_count }}</p>
+            </div>
+            <div class="bg-yellow-100 rounded-full p-3">
+                <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+            </div>
+        </div>
+    </a>
+
+    <!-- past event -->
+    <a href="?filter=past" class="bg-white rounded-xl shadow-md p-6 border-l-4 cursor-pointer">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600">Past Events</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">{{ past_events_count }}</p>
+            </div>
+            <div class="bg-purple-100 rounded-full p-3">
+                <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+        </div>
+    </a>
+</div>
+
+<!-- today events -->
+{% if today_events %}
+<div class="bg-white rounded-xl shadow-md p-6 mb-8">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Today's Events</h2>
+        <span class="bg-indigo-100 text-indigo-800 text-sm font-semibold px-4 py-1 rounded-full">
+            {{ today_events|length }} event{{ today_events|length|pluralize }}
+        </span>
+    </div>
+    
+    <div class="space-y-4">
+        {% for event in today_events %}
+        <div class="border border-gray-200 rounded-lg p-4 hover:border-indigo-300 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start">
+                <div class="flex-1">
+                    <h3 class="text-lg font-semibold text-gray-900">{{ event.name }}</h3>
+                    <div class="flex items-center space-x-4 mt-2 text-sm text-gray-600">
+                        <span class="flex items-center">
+                             {{ event.time|time:"g:i A" }}
+                        </span>
+                        <span class="flex items-center">
+                            {{ event.location }}
+                        </span>
+                        <span class="bg-gray-100 px-2 py-1 rounded">
+                            {{ event.category.name }}
+                        </span>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">
+                        {{ event.participant_count }} participant{{ event.participant_count|pluralize }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!--  all events lists view -->
+<div class="bg-white rounded-xl shadow-md p-6">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">
+            {% if filter_type == 'upcoming' %}
+                Upcoming Events
+            {% elif filter_type == 'past' %}
+                Past Events
+            {% else %}
+                All Events
+            {% endif %}
+        </h2>
+        <a href="{% url 'event_create' %}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
+            Create Event
+        </a>
+    </div>
+    
+    {% if events %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Participants</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for event in events %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">{{ event.name }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                            {{ event.category.name }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {{ event.date|date:"M d, Y" }} at {{ event.time|time:"g:i A" }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {{ event.location }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                            {{ event.participant_count }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <a href="{% url 'event_detail' event.id %}" class="text-indigo-600 hover:text-indigo-900 mr-3">View</a>
+                        <a href="{% url 'event_edit' event.id %}" class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
+                        <a href="{% url 'event_delete' event.id %}" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure?')">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+        <p class="mt-4 text-gray-500">No events found for this category.</p>
+        <a href="{% url 'event_create' %}" class="mt-4 inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
+            Create First Event
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

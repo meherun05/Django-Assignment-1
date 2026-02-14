@@ -1,0 +1,46 @@
+{% extends 'index.html' %}
+
+{% block title %}Participants - Event Management{% endblock %}
+
+{% block content %}
+<div class="mb-8 flex justify-between items-center">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-900">Participants</h1>
+    </div>
+    <a href="{% url 'participant_create' %}" class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors shadow-md">
+        Add Participant
+    </a>
+</div>
+
+{% if participants %}
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Events</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {% for participant in participants %}
+            <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ participant.name }}</td>
+                <td class="px-6 py-4 text-sm text-gray-600">{{ participant.email }}</td>
+                <td class="px-6 py-4 text-sm text-gray-600">{{ participant.event_count }} event{{ participant.event_count|pluralize }}</td>
+                <td class="px-6 py-4 text-sm font-medium space-x-3">
+                    <a href="{% url 'participant_edit' participant.id %}" class="text-blue-600 hover:text-blue-800">Edit</a>
+                    <a href="{% url 'participant_delete' participant.id %}" class="text-red-600 hover:text-red-800" onclick="return confirm('Delete?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="text-center py-16 bg-white rounded-xl shadow-md">
+    <p class="text-xl text-gray-500">No participants yet</p>
+</div>
+{% endif %}
+{% endblock %}
